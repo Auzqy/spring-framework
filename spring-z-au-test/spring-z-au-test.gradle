@@ -42,10 +42,10 @@ dependencies {
     compile group: 'io.projectreactor', name: 'reactor-core', version: '3.2.10.RELEASE'
 
     // au added 这个也是可以的，但是编写代码的时候没有提示
-    providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+//    providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
     // 经过 au 尝试，这两个结合起来才可以使用lombok这个组件 todo 为啥？
 //    annotationProcessor 'org.projectlombok:lombok:1.18.4' 
     // 在修改完 preference 中的 annotationProcessor 属性后，上面那行可以不要
     // 如果不做修改，这两个加起来也是不能够跑通的，同样找不到方法
-//    compileOnly 'org.projectlombok:lombok:1.18.4'
+    compileOnly 'org.projectlombok:lombok:1.18.4'
 }

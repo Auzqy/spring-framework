@@ -76,12 +76,18 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	}
 
 	/**
+	 *
+	 * 创建 ClassPathXmlApplicationContext 对象
+	 * 	 	1。 加载定义好的 xml 文件
+	 * 	 	2。 自动刷新 context 上下文
+	 *
 	 * Create a new ClassPathXmlApplicationContext, loading the definitions
 	 * from the given XML file and automatically refreshing the context.
 	 * @param configLocation resource location
 	 * @throws BeansException if context creation failed
 	 */
 	public ClassPathXmlApplicationContext(String configLocation) throws BeansException {
+		// 注意 refresh = true
 		this(new String[] {configLocation}, true, null);
 	}
 
@@ -138,8 +144,21 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			String[] configLocations, boolean refresh, @Nullable ApplicationContext parent)
 			throws BeansException {
 
+		/*
+			其中
+			1。 设置好资源加载器（ResourcePatternResolver）
+			2。 设置好应用上下文（ApplicationContext），这个可以为 null
+		 */
 		super(parent);
+
+		/*
+			configLocations 可以为null，但是如果不为 null，它其中的元素是否为null，在该方法中做了校验
+				Assert.noNullElements(locations, "Config locations must not be null");
+
+		 */
 		setConfigLocations(configLocations);
+
+
 		if (refresh) {
 			refresh();
 		}
