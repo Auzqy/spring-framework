@@ -155,11 +155,26 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			configLocations 可以为null，但是如果不为 null，它其中的元素是否为null，在该方法中做了校验
 				Assert.noNullElements(locations, "Config locations must not be null");
 
+			利用上下文环境，解析配置文件中路径中的变量 ${XXX},如果不对，会抛出异常
 		 */
 		setConfigLocations(configLocations);
 
 
+
 		if (refresh) {
+			/*
+			 *	description:  这里翻译成中文是刷新，或者是更新，au觉得理解成更新更合适，
+			 * 				它的作用就是重新初始化/加载 Spring 容器。
+			 *
+			 * 				该方法是个很核心的方法
+			 *
+			 * 				au觉得这里可能是使用 模版方法模式
+			 * 				org.springframework.context.support
+			 * 					.AbstractApplicationContext.refresh
+			 *
+			 * createTime: 2019-08-08 16:16
+			 * @author zqy
+			 */
 			refresh();
 		}
 	}

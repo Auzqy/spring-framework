@@ -514,13 +514,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 
-		// 线程同步
+		// 线程同步 todo au对这里的同步，感觉理解的还很不全面
 		synchronized (this.startupShutdownMonitor) {
 
 			// 1. 准备对上下文的刷新
 			// Prepare this context for refreshing.
 			prepareRefresh();
 
+			// 2. 通知子类更新内部的 bean 工厂
 			// Tell the subclass to refresh the internal bean factory.
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
@@ -581,6 +582,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 * description:  准备上下文环境,
+	 * 			更新、设置启动时间、更改激活标志 以及 为属性资源执行初始化
+	 * createTime: 2019-08-08 16:23
+	 * @author zqy
+	 *
 	 * Prepare this context for refreshing, setting its startup date and
 	 * active flag as well as performing any initialization of property sources.
 	 */

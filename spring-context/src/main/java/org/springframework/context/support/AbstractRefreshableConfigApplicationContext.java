@@ -126,6 +126,18 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	 * @see org.springframework.core.env.Environment#resolveRequiredPlaceholders(String)
 	 */
 	protected String resolvePath(String path) {
+		/*
+		 * description:  .resolveRequiredPlaceholders(path)
+		 * (org.springframework.core.env.PropertyResolver.resolveRequiredPlaceholders)
+		 *
+		 * Resolve ${...} placeholders in the given text,
+		 * replacing them with corresponding
+		 * property values as resolved by {@link #getProperty}.
+		 * Unresolvable placeholders with
+		 * no default value will cause an IllegalArgumentException to be thrown.
+		 * createTime: 2019-08-08 16:04
+		 * @author zqy
+		 */
 		return getEnvironment().resolveRequiredPlaceholders(path);
 	}
 
