@@ -59,6 +59,10 @@ public class ResourceEntityResolver extends DelegatingEntityResolver {
 
 
 	/**
+	 * description:  为特定的 ResourceLoader 创建一个 资源实体解析器（ResourceEntityResolver）
+	 * noteTime: 2019-08-11 15:08
+	 * Annotator: au
+	 *
 	 * Create a ResourceEntityResolver for the specified ResourceLoader
 	 * (usually, an ApplicationContext).
 	 * @param resourceLoader the ResourceLoader (or ApplicationContext)

@@ -517,11 +517,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// 线程同步 todo au对这里的同步，感觉理解的还很不全面
 		synchronized (this.startupShutdownMonitor) {
 
-			// 1. 准备对上下文的刷新
+			// 1. 准备上下文的刷新 基础环境
 			// Prepare this context for refreshing.
 			prepareRefresh();
 
-			// 2. 通知子类更新内部的 bean 工厂
+			// 2. 通知子类更新内部的 bean 工厂, 并返回该对象，
 			// Tell the subclass to refresh the internal bean factory.
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 

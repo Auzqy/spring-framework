@@ -74,6 +74,11 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	@Nullable
 	private DefaultListableBeanFactory beanFactory;
 
+	/*
+	 * description:  todo 随便 new 个 final 的对象就可以当锁了 是吗？
+	 * noteTime: 2019-08-08 23:33
+	 * Annotator: au
+	 */
 	/** Synchronization monitor for the internal BeanFactory. */
 	private final Object beanFactoryMonitor = new Object();
 
@@ -116,6 +121,14 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 
 
 	/**
+	 *
+	 * description:  这个实现执行 上下文的潜在 bean factory 的刷新，
+	 * 			关闭掉之前的工厂（如果有的话）并且
+	 * 			为上下文生命周期中的下一个阶段初始化一个新的 bean factory。
+	 *
+	 * noteTime: 2019-08-08 23:21
+	 * Annotator: au
+	 *
 	 * This implementation performs an actual refresh of this context's underlying
 	 * bean factory, shutting down the previous bean factory (if any) and
 	 * initializing a fresh bean factory for the next phase of the context's lifecycle.
@@ -128,8 +141,11 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 		}
 		try {
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+			// 为 beanFactory 设置一个序列化的 id
 			beanFactory.setSerializationId(getId());
+			// 对 beanFactory 进行定制化
 			customizeBeanFactory(beanFactory);
+			// 加载 beanFactory （这一步是比较关键的）
 			loadBeanDefinitions(beanFactory);
 			synchronized (this.beanFactoryMonitor) {
 				this.beanFactory = beanFactory;

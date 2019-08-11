@@ -329,10 +329,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		try {
 			InputStream inputStream = encodedResource.getResource().getInputStream();
 			try {
+				// 输入流转成 JDK 的 InputSource 类型
 				InputSource inputSource = new InputSource(inputStream);
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());
 				}
+				// 加载 bean definitions（doXXX 中 do 开头的往往是具体执行的）
 				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 			}
 			finally {
