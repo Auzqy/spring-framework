@@ -4,7 +4,7 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
 	   http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="myBean01" class="top.au.spring.bean.MyBean01">
+	<bean id="myBean01" class="top.au.spring.bean.MyBean01" >
 		<property name="name01" value="赵敏"/>
 		<property name="age01" value="28"/>
 	</bean>
