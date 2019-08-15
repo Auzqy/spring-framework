@@ -814,12 +814,24 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			logger.trace("Pre-instantiating singletons in " + this);
 		}
 
+		/*
+		 * description: 迭代副本为了容许 init-methods(初始化方法) 依次注册新的 bean definitions。
+		 * 			虽然这可能不是 常规工厂启动器的一部分，但它依然可以工作的很好。
+		 * 			todo 其实 au 不太明白它到底说了个啥意思
+		 * noteTime: 2019-08-15 12:58
+		 * Annotator: au
+		 */
 		// Iterate over a copy to allow for init methods which in turn register new bean definitions.
 		// While this may not be part of the regular factory bootstrap, it does otherwise work fine.
 		List<String> beanNames = new ArrayList<>(this.beanDefinitionNames);
 
+		// 触发所有非延迟加载单例 bean 的初始化方法
 		// Trigger initialization of all non-lazy singleton beans...
 		for (String beanName : beanNames) {
+			/*
+			 *	返回一个合并过的 Root Bean Definition，
+			 * 	如果指定的 bean 对应于子 bean definition，则遍历这个父 bean definition。
+			 */
 			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
 				if (isFactoryBean(beanName)) {
@@ -847,6 +859,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 
+		// 为所有适用 bean 触发初始化后的回调方法（post-initialization callback）…
 		// Trigger post-initialization callback for all applicable beans...
 		for (String beanName : beanNames) {
 			Object singletonInstance = getSingleton(beanName);
@@ -929,7 +942,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 			else {
-				// Still in startup registration phase
+				// Still in startup registration phase // au note： 将 beanDefinition 定义放到 beanDefinitionMap 中
 				this.beanDefinitionMap.put(beanName, beanDefinition);
 				this.beanDefinitionNames.add(beanName);
 				removeManualSingletonName(beanName);
@@ -1020,7 +1033,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	@Override
 	public void registerSingleton(String beanName, Object singletonObject) throws IllegalStateException {
 		super.registerSingleton(beanName, singletonObject);
-		updateManualSingletonNames(set -> set.add(beanName), set -> !this.beanDefinitionMap.containsKey(beanName));
+		updateManualSingletonNames(
+				set -> set.add(beanName),
+				set -> !this.beanDefinitionMap.containsKey(beanName));
 		clearByTypeCache();
 	}
 

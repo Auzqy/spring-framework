@@ -1205,6 +1205,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 
 	/**
+	 * description:  返回一个合并过的 Root Bean Definition，
+	 * 			如果指定的 bean 对应于子 bean definition，则遍历这个父 bean definition。
+	 *
+	 * noteTime: 2019-08-15 15:16
+	 * Annotator: au
+	 *
 	 * Return a merged RootBeanDefinition, traversing the parent bean definition
 	 * if the specified bean corresponds to a child bean definition.
 	 * @param beanName the name of the bean to retrieve the merged definition for
@@ -1222,6 +1228,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
+	 * description:  如果给定的 bean definition 是一个 子 bean definition，
+	 * 		则通过与父级合并来返回给定顶级 bean 的 root bean definition。
+	 *
+	 * noteTime: 2019-08-15 15:36
+	 * Annotator: au
+	 *
 	 * Return a RootBeanDefinition for the given top-level bean, by merging with
 	 * the parent if the given bean's definition is a child bean definition.
 	 * @param beanName the name of the bean definition
@@ -1759,6 +1771,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected abstract boolean containsBeanDefinition(String beanName);
 
 	/**
+	 * description:  返回给定 bean name 的 bean definition。
+	 * 		子类通常应该实现缓存，因为每次需要bean定义元数据时，这个类都会调用这个方法。
+	 *
+	 *		根据具体 bean factory 实现的性质，此操作可能代价高昂（例如，由于在外部注册表中查找目录）。
+	 *	但是，对于可列举的 bean factory，这通常只相当于本地哈希查找：因此，这种操作是那公共接口的一部分。
+	 * 	在这种情况下，相同的实现既可以用于此模板方法，也可以用于公共接口方法。
+	 * noteTime: 2019-08-15 15:23
+	 * Annotator: au
+	 *
 	 * Return the bean definition for the given bean name.
 	 * Subclasses should normally implement caching, as this method is invoked
 	 * by this class every time bean definition metadata is needed.

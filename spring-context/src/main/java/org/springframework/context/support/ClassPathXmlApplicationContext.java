@@ -152,10 +152,9 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 		super(parent);
 
 		/*
-			configLocations 可以为null，但是如果不为 null，它其中的元素是否为null，在该方法中做了校验
-				Assert.noNullElements(locations, "Config locations must not be null");
-
-			利用上下文环境，解析配置文件中路径中的变量 ${XXX},如果不对，会抛出异常
+		 *	configLocations 可以为null，但是如果不为 null，它其中的元素是否为null，在该方法中做了校验
+		 *		Assert.noNullElements(locations, "Config locations must not be null");
+		 *	利用上下文环境，解析配置文件中路径中的变量 ${XXX},如果不对，会抛出异常
 		 */
 		setConfigLocations(configLocations);
 
