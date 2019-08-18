@@ -317,6 +317,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				if (mbd.isSingleton()) {
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
+							/**
+							 * description:  创建单例的 bean 实例
+							 * noteTime: 2019-08-18 18:25
+							 * Annotator: au
+							 */
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {

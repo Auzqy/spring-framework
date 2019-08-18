@@ -854,6 +854,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 					}
 				}
 				else {
+					/**
+					 * description:  如果不是工厂 bean，用户配置的普通的 bean，将在这里调用，
+					 * 			底层实现初始化 bean 对象，并对 bean 对象赋值和依赖注入
+					 * noteTime: 2019-08-18 18:20
+					 * Annotator: au
+					 */
 					getBean(beanName);
 				}
 			}
