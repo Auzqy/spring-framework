@@ -434,6 +434,7 @@ public class BeanDefinitionParserDelegate {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
 
+		// 解析 applicationContext.xml 文档的节点，把 bean 的配置定义封装到一个 GenericBeanDefinition 对象中。
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
@@ -512,17 +513,31 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		try {
+			// 底层创建了一个 GenericBeanDefinition
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
 
+			// 解析 bean 定义的属性
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+
+			// 设置 <description></description> 属性
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
+			// 解析 meta 属性
 			parseMetaElements(ele, bd);
+
+			// 解析 look-up 属性
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+
+			// 解析 replace-method 属性
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
+			// 解析 constructor-arg 属性
 			parseConstructorArgElements(ele, bd);
+
+			// 解析 property 属性
 			parsePropertyElements(ele, bd);
+
+			// 解析 qualifier 属性
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());
