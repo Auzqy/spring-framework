@@ -599,6 +599,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Initialize the bean instance.
 		Object exposedObject = bean;
 		try {
+			/**
+			 * description:  填充 bean 的属性值，给 bean 赋值，和注入依赖
+			 * noteTime: 2019-08-18 22:28
+			 * Annotator: au
+			 */
 			populateBean(beanName, mbd, instanceWrapper);
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
@@ -1449,6 +1454,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			checkDependencies(beanName, mbd, filteredPds, pvs);
 		}
 
+		/**
+		 * description:  填充值
+		 * noteTime: 2019-08-18 22:29
+		 * Annotator: au
+		 */
 		if (pvs != null) {
 			applyPropertyValues(beanName, mbd, bw, pvs);
 		}
@@ -1729,6 +1739,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			mpvs.setConverted();
 		}
 
+		/**
+		 * description:  填充属性值
+		 * noteTime: 2019-08-18 22:31
+		 * Annotator: au
+		 */
 		// Set our (possibly massaged) deep copy.
 		try {
 			bw.setPropertyValues(new MutablePropertyValues(deepCopy));

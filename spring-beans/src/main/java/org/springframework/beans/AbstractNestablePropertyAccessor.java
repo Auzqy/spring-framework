@@ -243,6 +243,11 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 					"Nested property in path '" + propertyName + "' does not exist", ex);
 		}
 		PropertyTokenHolder tokens = getPropertyNameTokens(getFinalPath(nestedPa, propertyName));
+		/**
+		 * description:  设置属性值
+		 * noteTime: 2019-08-18 22:36
+		 * Annotator: au
+		 */
 		nestedPa.setPropertyValue(tokens, new PropertyValue(propertyName, value));
 	}
 
@@ -275,6 +280,11 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 			processKeyedProperty(tokens, pv);
 		}
 		else {
+			/**
+			 * description:  处理本地属性
+			 * noteTime: 2019-08-18 22:38
+			 * Annotator: au
+			 */
 			processLocalProperty(tokens, pv);
 		}
 	}
@@ -455,6 +465,11 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 				}
 				pv.getOriginalPropertyValue().conversionNecessary = (valueToApply != originalValue);
 			}
+			/**
+			 * description:  设置属性值
+			 * noteTime: 2019-08-18 22:39
+			 * Annotator: au
+			 */
 			ph.setValue(valueToApply);
 		}
 		catch (TypeMismatchException ex) {
