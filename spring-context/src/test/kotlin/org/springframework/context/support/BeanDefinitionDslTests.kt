@@ -1,11 +1,11 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2002-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,11 @@
 
 package org.springframework.context.support
 
-import org.junit.Assert.*
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.fail
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.BeanDefinitionDsl.*
@@ -28,7 +31,7 @@ import java.util.stream.Collectors
 
 @Suppress("UNUSED_EXPRESSION")
 class BeanDefinitionDslTests {
-	
+
 	@Test
 	fun `Declare beans with the functional Kotlin DSL`() {
 		val beans = beans {
@@ -156,7 +159,52 @@ class BeanDefinitionDslTests {
 		}
 		context.getBean<Baz>()
 	}
+
+	@Test  // gh-21845
+	fun `Declare beans leveraging callable reference`() {
+		val beans = beans {
+			bean<Bar>()
+			bean(::baz)
+		}
+		val context = GenericApplicationContext().apply {
+			beans.initialize(this)
+			refresh()
+		}
+		context.getBean<Baz>()
+	}
 	
+
+	@Test
+	fun `Declare beans with accepted profiles`() {
+		val beans = beans {
+			profile("foo") { bean<Foo>() }
+			profile("!bar") { bean<Bar>() }
+			profile("bar | barbar") { bean<BarBar>() }
+			profile("baz & buz") { bean<Baz>() }
+			profile("baz & foo") { bean<FooFoo>() }
+		}
+		val context = GenericApplicationContext().apply {
+			environment.addActiveProfile("barbar")
+			environment.addActiveProfile("baz")
+			environment.addActiveProfile("buz")
+			beans.initialize(this)
+			refresh()
+		}
+		context.getBean<Baz>()
+		context.getBean<BarBar>()
+		context.getBean<Bar>()
+
+		try {
+			context.getBean<Foo>()
+			fail("should have thrown an Exception")
+		} catch (ignored: Exception) {
+		}
+		try {
+			context.getBean<FooFoo>()
+			fail("should have thrown an Exception")
+		} catch (ignored: Exception) {
+		}
+	}
 }
 
 class Foo
@@ -164,3 +212,5 @@ class Bar
 class Baz(val bar: Bar)
 class FooFoo(val name: String)
 class BarBar(val foos: Collection<Foo>)
+
+fun baz(bar: Bar) = Baz(bar)

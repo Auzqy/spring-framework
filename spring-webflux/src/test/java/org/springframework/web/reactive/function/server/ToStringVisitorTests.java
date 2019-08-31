@@ -1,11 +1,11 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2002-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,15 +16,22 @@
 
 package org.springframework.web.reactive.function.server;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
-import static org.junit.Assert.*;
-import static org.springframework.web.reactive.function.server.RequestPredicates.*;
-import static org.springframework.web.reactive.function.server.RouterFunctions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+import static org.springframework.web.reactive.function.server.RequestPredicates.contentType;
+import static org.springframework.web.reactive.function.server.RequestPredicates.method;
+import static org.springframework.web.reactive.function.server.RequestPredicates.methods;
+import static org.springframework.web.reactive.function.server.RequestPredicates.path;
+import static org.springframework.web.reactive.function.server.RequestPredicates.pathExtension;
+import static org.springframework.web.reactive.function.server.RequestPredicates.queryParam;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 /**
  * @author Arjen Poutsma
@@ -35,11 +42,11 @@ public class ToStringVisitorTests {
 	public void nested() {
 		HandlerFunction<ServerResponse> handler = new SimpleHandlerFunction();
 		RouterFunction<ServerResponse> routerFunction = route()
-				.path("/foo", builder -> {
+				.path("/foo", builder ->
 					builder.path("/bar", () -> route()
 							.GET("/baz", handler)
-							.build());
-				})
+							.build())
+				)
 				.build();
 
 		ToStringVisitor visitor = new ToStringVisitor();
@@ -51,7 +58,7 @@ public class ToStringVisitorTests {
 				"  (GET && /baz) -> \n" +
 				" }\n" +
 				"}";
-		assertEquals(expected, result);
+		assertThat(result).isEqualTo(expected);
 	}
 
 	@Test
@@ -75,6 +82,11 @@ public class ToStringVisitorTests {
 		testPredicate(method(HttpMethod.GET).or(path("/foo")), "(GET || /foo)");
 
 		testPredicate(method(HttpMethod.GET).negate(), "!(GET)");
+
+		testPredicate(GET("/foo")
+				.or(contentType(MediaType.TEXT_PLAIN))
+				.and(accept(MediaType.APPLICATION_JSON).negate()),
+				"(((GET && /foo) || Content-Type: text/plain) && !(Accept: application/json))");
 	}
 
 	private void testPredicate(RequestPredicate predicate, String expected) {
@@ -82,7 +94,7 @@ public class ToStringVisitorTests {
 		predicate.accept(visitor);
 		String result = visitor.toString();
 
-		assertEquals(expected, result);
+		assertThat(result).isEqualTo(expected);
 	}
 
 

@@ -1,11 +1,11 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2002-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -82,7 +82,6 @@ public abstract class RequestPredicates {
 		return request -> true;
 	}
 
-
 	/**
 	 * Return a {@code RequestPredicate} that matches if the request's
 	 * HTTP method is equal to the given method.
@@ -112,6 +111,9 @@ public abstract class RequestPredicates {
 	 */
 	public static RequestPredicate path(String pattern) {
 		Assert.notNull(pattern, "'pattern' must not be null");
+		if (!pattern.isEmpty() && !pattern.startsWith("/")) {
+			pattern = "/" + pattern;
+		}
 		return pathPredicates(DEFAULT_PATTERN_PARSER).apply(pattern);
 	}
 
@@ -370,10 +372,17 @@ public abstract class RequestPredicates {
 		/**
 		 * Receive first notification of a logical AND predicate.
 		 * The first subsequent notification will contain the left-hand side of the AND-predicate;
-		 * the second notification contains the right-hand side, followed by {@link #endAnd()}.
+		 * followed by {@link #and()}, followed by the right-hand side, followed by {@link #endAnd()}.
 		 * @see RequestPredicate#and(RequestPredicate)
 		 */
 		void startAnd();
+
+		/**
+		 * Receive "middle" notification of a logical AND predicate.
+		 * The following notification contains the right-hand side, followed by {@link #endAnd()}.
+		 * @see RequestPredicate#and(RequestPredicate)
+		 */
+		void and();
 
 		/**
 		 * Receive last notification of a logical AND predicate.
@@ -388,6 +397,13 @@ public abstract class RequestPredicates {
 		 * @see RequestPredicate#or(RequestPredicate)
 		 */
 		void startOr();
+
+		/**
+		 * Receive "middle" notification of a logical OR predicate.
+		 * The following notification contains the right-hand side, followed by {@link #endOr()}.
+		 * @see RequestPredicate#or(RequestPredicate)
+		 */
+		void or();
 
 		/**
 		 * Receive last notification of a logical OR predicate.
@@ -750,6 +766,7 @@ public abstract class RequestPredicates {
 		public void accept(Visitor visitor) {
 			visitor.startAnd();
 			this.left.accept(visitor);
+			visitor.and();
 			this.right.accept(visitor);
 			visitor.endAnd();
 		}
@@ -843,6 +860,7 @@ public abstract class RequestPredicates {
 		public void accept(Visitor visitor) {
 			visitor.startOr();
 			this.left.accept(visitor);
+			visitor.or();
 			this.right.accept(visitor);
 			visitor.endOr();
 		}
